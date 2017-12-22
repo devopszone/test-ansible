@@ -9,13 +9,13 @@
     {
       "vmId":4,   
       "VMName":"Quali_QualiAppl1_DevEnvironment_Webserver_4",
-      "hostFQDN":"ec2-13-127-17-148.ap-south-1.compute.amazonaws.com",
+      "hostFQDN":"xxxxxxxxxxxxxxxxxxxxxxxxxxxx",
       "Vmstatus":"running"
     },
     {
       "vmId":5,   
       "VMName":"Quali_QualiAppl1_DevEnvironment_Webserver_5",
-      "hostFQDN":"ec2-35-154-126-16.ap-south-1.compute.amazonaws.com",
+      "hostFQDN":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
       "Vmstatus":"running"
     },
  ],
