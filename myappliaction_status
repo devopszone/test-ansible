@@ -1,0 +1,14 @@
+[hosts]
+Quali_QualiAppln_DevEnvironment_Webserver_11 ansible_host=ec2-35-154-80-186.ap-south-1.compute.amazonaws.com aws_region=ap-south-1 ansible_user=centos security_group_name=NewNSGSample1 sshkeypair_name=sathiya_key instance_type=t2.small image_id=ami-6cd2ae03 resource_group_name=DevEnvironment disk=20 vmid=24
+Quali_QualiAppln_DevEnvironment_Webserver_12 ansible_host=ec2-13-126-25-139.ap-south-1.compute.amazonaws.com aws_region=ap-south-1 ansible_user=centos security_group_name=NewNSGSample2 sshkeypair_name=sathiya_key instance_type=t2.small image_id=ami-6cd2ae03 resource_group_name=DevEnvironment disk=20 vmid=25
+Quali_QualiAppln_DevEnvironment_Webserver_3 ansible_host=ec2-13-126-181-143.ap-south-1.compute.amazonaws.com aws_region=ap-south-1 ansible_user=ec2-user security_group_name=newsample2vm1 sshkeypair_name=sathiya_key instance_type=t2.small image_id=ami-ac1e68c3 resource_group_name=DevEnvironment disk=12 vmid=26
+Quali_QualiAppln_DevEnvironment_Webserver_4 ansible_host=ec2-13-127-87-218.ap-south-1.compute.amazonaws.com aws_region=ap-south-1 ansible_user=ec2-user security_group_name=newsample2vm sshkeypair_name=sathiya_key instance_type=t2.small image_id=ami-ac1e68c3 resource_group_name=DevEnvironment disk=12 vmid=27
+
+[hosts:vars]
+Id=0
+OrgId=1
+ProjectId=2
+ApplicationId=3
+EnvironmentId=4
+VMRolesId=5
+ 

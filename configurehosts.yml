@@ -1,0 +1,92 @@
+---
+ - hosts: all
+   connection: local
+   vars:
+        store_keyfile: |
+          import jenkins.model.*
+          import com.cloudbees.plugins.credentials.*
+          import com.cloudbees.plugins.credentials.impl.*
+          import com.cloudbees.plugins.credentials.domains.*
+          import com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey
+          // set Credentials domain name (null means is it global)
+          domainName = null
+          credentialsStore = Jenkins.instance.getExtensionList('com.cloudbees.plugins.credentials.SystemCredentialsProvider')[0]?.getStore()
+          domain = new Domain(domainName, null, Collections.<DomainSpecification>emptyList())
+          credentialsStore?.getCredentials(domain).each{
+            if(it instanceof BasicSSHUserPrivateKey) {
+              if ( it.id?.contains("${keyname}")) {
+                   println it.privateKeySource?.getPrivateKey()
+                   new File('/tmp',"${keyname}") << it.privateKeySource?.getPrivateKey()
+              }
+            } 
+          }
+          return
+
+   tasks: 
+    - name: Remove the temporary files if present 
+      file: 
+        path: "/tmp/{{ sshkeypair_name }}"
+        state: absent 
+      ignore_errors: yes
+
+    - name: Store the key to a temporary file
+      jenkins_script:
+        script: "{{ store_keyfile }}"
+        user: "{{ jenkins_admin }}"
+        password: "{{ jenkins_passwd }}"
+        args: 
+          keyname: "{{ sshkeypair_name }}"
+      register: sshkey
+      
+#    - name: Displying the Key 
+#      debug: 
+#        msg: "Key {{ sshkey }}"
+#      when: sshkey is defined
+
+    - name: set the permission
+      file: 
+        path: "/tmp/{{ sshkeypair_name }}"
+        mode: 0400
+      when: sshkey is defined
+      
+    - name: set ssh key value in ansible
+      set_fact: ansible_ssh_private_key_file="/tmp/{{ sshkeypair_name }}"
+      when: sshkey is defined
+
+ - hosts: hosts
+   become_user: root 
+   become: true
+
+   tasks:
+     - name: Disable the firewall
+       command: systemctl stop firewalld
+       ignore_errors: yes
+
+     - name: Get SElinux status
+       command: selinuxenabled
+       register: selinuxdisabled
+       ignore_errors: yes
+
+     - name: Disable SElinux
+       command: setenforce 0
+       when: not selinuxdisabled
+
+     - name: Check /var/run/mariadb/mariadb.pid exists
+       stat: path=/var/run/mariadb/mariadb.pid
+       register: stat_result
+
+     - name: Stop the mysql server if running to save memory
+       command: "mysqladmin shutdown"
+       ignore_errors: yes
+       when: stat_result.stat.exists == True
+
+ - hosts: all
+   connection: local
+  
+   tasks: 
+     - name: Remove the temporary files 
+       file: 
+         path: "/tmp/{{ sshkeypair_name }}"
+         state: absent 
+       when: ansible_ssh_private_key_file is defined
+       ignore_errors: yes

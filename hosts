@@ -1,0 +1,11 @@
+[hosts]
+Quali_QualiAppl1_DevEnvironment_Webserver_4 aws_region=us-west-2 ansible_user=ubuntu security_group_name=newsample2vm sshkeypair_name=aws instance_type=t2.small image_id=ami-ac1e68c3 resource_group_name=DevEnvironment disk=30 vmid=4
+Quali_QualiAppl1_DevEnvironment_Webserver_5  aws_region=us-west-2 ansible_user=ubuntu security_group_name=newsample2vm sshkeypair_name=aws instance_type=t2.small image_id=ami-ac1e68c3 resource_group_name=DevEnvironment disk=30 vmid=5
+
+[hosts:vars]
+Id=0
+OrgId=2
+ProjectId=9
+ApplicationId=2
+EnvironmentId=2
+VMRolesId=1

@@ -1,0 +1,23 @@
+---
+
+- hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+
+    - name: Provision a set of instances
+      ec2:
+         key_name: awskeypair
+         instance_type: t2.micro
+         image: ami-2f4b834f
+         region: us-west-2
+         wait: true
+         exact_count: 1
+         count_tag:
+            Name: Demo
+         instance_tags:
+            Name: Demo
+      register: ec2
+
+...

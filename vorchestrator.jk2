@@ -1,0 +1,19 @@
+{
+  "Id":{{ Id }},
+  "OrgId":{{ OrgId }},
+  "ProjectId":{{ ProjectId }},
+  "ApplicationId":{{ ApplicationId }},
+  "EnvironmentId":{{ EnvironmentId }},
+  "VMRolesId":{{ VMRolesId }},
+  "VMNamelist": [
+{% for host in groups['hosts'] %}
+    {
+      "vmId":{{ hostvars[host]['vmid'] }},   
+      "VMName":"{{ hostvars[host]['inventory_hostname'] }}",
+      "hostFQDN":"{{ hostvars[host]['fqdn'] }}",
+      "Vmstatus":"{{ hostvars[host]['vmstatus'] }}"
+    },
+{% endfor %}
+ ],
+  "Status": "HostProvisionFailed"   
+}

@@ -1,0 +1,40 @@
+---
+
+- hosts: hosts
+  connection: local
+
+  tasks:
+    - name: Check if the machine instance is available and collect the IDs
+      ec2_remote_facts:
+        filters:
+          instance-state-name: "running"
+          "tag:Name": "{{ inventory_hostname }}"
+        region: "{{ aws_region }}"
+      register: ec2
+      
+    - debug:
+        var: ec2
+
+    - name: Delete the instances
+      ec2:
+         key_name: awskeypair
+         wait: true
+         instance_ids: "{{ ec2['instances'][0]['id'] }}"
+         instance_tags:
+            Name: "{{ inventory_hostname }}"
+         state: 'absent'
+         region: "{{ aws_region }}"
+      when:  ec2['instances'][0]['id']  is defined
+
+
+    - name: Delete security Group
+      ec2_group:
+        name: ansiblegroup
+        description: Security group created using ansible
+        state: 'absent'
+        region: "{{ aws_region }}"
+      run_once: true
+        
+...
+
+

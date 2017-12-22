@@ -1,0 +1,64 @@
+---
+
+- hosts: hosts
+  connection: local
+
+  tasks:
+#    - name: Search for the latest vivareal ami
+#      ec2_ami_find:
+#        name: "ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-*"
+#        owner: 756305633624
+#        name: "{{ inventory_hostname }}"
+#        owner: 'self'
+#       ami_tags: 
+#          Name: newansiblevm01
+#        region: 'us-west-2'
+#        no_result_action: fail
+#      register: ec2_ami_find
+
+#    - name: Displying the ami_id found
+#      debug: msg="AMI ID for (( inventory_hostname }} =  {{ ec2_ami_find.results[0].ami_id }} "
+#      debug: msg="AMI ID for (( inventory_hostname }} =  {{ ec2_ami_find }} "
+#
+
+#    - name: Gather facts
+#      ec2_remote_facts:
+#        filters:
+#          instance-state-name: running
+#          "tag:Name": "{{ inventory_hostname }}"
+#        region: 'us-west-2'
+#
+#    - name: start the stopped instances if already present
+#      ec2:
+#        instance_ids: "i-0e702d618d9dc1b99" 
+#        instance_tags:
+#          Name: "{{ inventory_hostname }}"
+#        region: 'us-west-2'
+#        state: running
+
+    - name: Create the security Group
+      ec2_group:
+        name: ansiblegroup
+        description: Security group created using ansible
+        region: "{{ aws_region }}"
+        rules:
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            cidr_ip: 0.0.0.0/0
+          - proto: tcp
+            from_port: 8080
+            to_port: 8080
+            cidr_ip: 0.0.0.0/0
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            cidr_ip: 0.0.0.0/0
+          - proto: all
+            from_port: all
+            to_port: all
+            group_name: ansiblegroup
+        rules_egress:
+          - proto: all
+            cidr_ip: 0.0.0.0/0
+
